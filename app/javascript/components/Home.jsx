@@ -14,7 +14,7 @@ export default () => (
         <hr className="my-4" />
         <div className="d-flex justify-content-between">
           <Link
-            to="/schedules"
+            to="/date_assignment"
             className="btn btn-lg custom-button "
             role="button"
           >

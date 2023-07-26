@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 
 const DateAssignments = () => {
   const navigate = useNavigate();
@@ -34,8 +35,8 @@ const DateAssignments = () => {
             {dateAssignments.map((assignment) => (
               <li key={assignment.id} className="list-group-item">
                 <div className="d-flex justify-content-between gap-2">
-                  <p>Start at: {assignment.starts_at}</p>
-                  <p>End at: {assignment.ends_at}</p>
+                  <p>Start at: {format(new Date(assignment.starts_at), 'dd/MM/yyyy')}</p>
+                  <p>End at: {format(new Date(assignment.ends_at), 'dd/MM/yyyy')}</p>
                 </div>
               </li>
             ))}

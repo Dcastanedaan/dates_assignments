@@ -2,7 +2,7 @@ class Api::V1::DatesAssignmentsController < ApplicationController
   before_action :set_data_assignment, only: %i[show destroy]
 
   def index
-    dates_assignments = DateAssignment.all.order(created_at: :desc)
+    dates_assignments = DateAssignment.all.order(starts_at: :desc)
     render json: dates_assignments
   end
 
@@ -27,7 +27,7 @@ class Api::V1::DatesAssignmentsController < ApplicationController
   private
 
   def date_assignment_params
-    params.permit(created_at, ends_at)
+    params.permit(:starts_at, :ends_at)
   end
 
   def set_data_assignment

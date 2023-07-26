@@ -18,15 +18,15 @@ export default () => (
             className="btn btn-lg custom-button "
             role="button"
           >
-            Create Schedules
+            Create dates assignments
           </Link>
           <Link
-          to="/schedules"
+          to="/date_assignments"
           className="btn btn-lg custom-button ml-4"
           role="button"
-        >
-          View Schedules
-        </Link>
+          >
+            View dates assignments
+          </Link>
         </div>
       </div>
     </div>

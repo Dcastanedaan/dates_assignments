@@ -5,3 +5,9 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+9.times do |i|
+  DateAssignment.create(
+    starts_at: Time.now + i.days,
+    ends_at: Time.now + (i + 1).days
+  )
+end

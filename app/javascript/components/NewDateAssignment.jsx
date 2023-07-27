@@ -59,12 +59,12 @@ const NewDataAssignment = () => {
     <div className="container mt-5">
       <div className="row">
         <div className="col-sm-12 col-lg-6 offset-lg-3">
-          <h1 className="font-weight-normal mb-5">
+          <h1 className="font-weight-normal mb-5 display-4 ">
             Adds a new dates range.
           </h1>
           <form onSubmit={onSubmit}>
             <div className="form-group">
-              <label htmlFor="dateAssignmentStartsAt">Enter the starting date</label>
+              <label htmlFor="dateAssignmentStartsAt" className="lead">Enter the starting date</label>
               <input
                 type="date"
                 name="startAt"
@@ -84,7 +84,7 @@ const NewDataAssignment = () => {
               )}
             </div>
             <div className="form-group">
-              <label htmlFor="dateAssignmentEndsAt">enter the starting date</label>
+              <label htmlFor="dateAssignmentEndsAt" className="lead">enter the starting date</label>
               <input
                 type="date"
                 name="endAt"

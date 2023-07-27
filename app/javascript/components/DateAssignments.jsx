@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
 const DateAssignments = () => {
@@ -26,24 +26,25 @@ const DateAssignments = () => {
     
     <div className="d-flex flex-column justify-content-center align-items-center vh-80 p-5 " >
       <div className="jumbotron jumbotron-fluid bg-transparent">
-
-        <div className="display-4 mb-">
-          <h1>Date Assignments</h1>
+        <div className="mb-2">
+          <h2 className="display-4">Date Assignments</h2>
         </div>
         <div className="p-3 bg-light">
           <ul className="list-group list-group-flush">
             {dateAssignments.map((assignment) => (
-              <li key={assignment.id} className="list-group-item">
-                <div className="d-flex justify-content-between gap-2">
-                  <p>Start at: {format(new Date(assignment.starts_at), 'dd/MM/yyyy')}</p>
-                  <p>End at: {format(new Date(assignment.ends_at), 'dd/MM/yyyy')}</p>
-                </div>
-              </li>
+              <Link to={`/date_assignment/${assignment.id}`} style={{ textDecoration: 'none'}}>
+                <li key={assignment.id} className="list-group-item">
+                  <div className="d-flex justify-content-between gap-2">
+                    <p className="lead">Start at: {format(new Date(assignment.starts_at), 'dd/MM/yyyy')}</p>
+                    <p className="lead">End at: {format(new Date(assignment.ends_at), 'dd/MM/yyyy')}</p>
+                  </div>
+                </li>
+              </Link>
             ))}
           </ul>
         </div>
       </div>
-      <button onClick={homeNavigate} className="btn btn-lg custom-button ml-4">Back</button>
+      <button onClick={homeNavigate} className="btn btn-lg custom-button ml-4 mt-2">Back</button>
     </div>
   );
 };

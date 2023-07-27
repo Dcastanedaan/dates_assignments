@@ -15,8 +15,22 @@ class Api::V1::DatesAssignmentsController < ApplicationController
     end
   end
 
+  def create_day
+    day_schedules = DaySchedule.create!(day_schedule_params)
+    if day_schedules
+      render json: day_schedules
+    else
+      render json: day_schedules.errors
+    end
+  end
+
   def show
-    render json: @dates_assignment
+    render json: {
+      starts_at: @data_assignment.starts_at,
+      ends_at: @data_assignment.ends_at,
+      day_schedules: @data_assignment.day_schedules,
+
+    }
   end
 
   def destroy
@@ -30,7 +44,15 @@ class Api::V1::DatesAssignmentsController < ApplicationController
     params.permit(:starts_at, :ends_at)
   end
 
+  def day_schedule_params
+    params.permit(:day, :hour, :minute, :quota, :date_assignment_id)
+  end
+
   def set_data_assignment
     @data_assignment = DateAssignment.find(params[:id])
+  end
+
+  def set_day_schedule
+    @day_schedule = DaySchedule.find(params[:id])
   end
 end

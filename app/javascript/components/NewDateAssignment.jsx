@@ -51,7 +51,7 @@ const NewDataAssignment = () => {
         }
         throw new Error("Network response was not ok.");
       })
-      .then((response) => navigate(`/dates_assignments/${response.id}`))
+      .then((response) => navigate(`/date_assignment/${response.id}`))
       .catch((error) => console.log(error.message));
   };
   

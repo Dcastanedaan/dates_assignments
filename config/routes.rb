@@ -3,8 +3,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       get 'dates_assignments/index'
       post 'dates_assignments/create'
+      post 'dates_assignments/create_day', to: 'dates_assignments#create_day'
       get '/show/:id', to: 'dates_assignments#show'
       delete '/destroy/:id', to: 'dates_assignments#destroy'
+
     end
   end
   root 'homepage#index'

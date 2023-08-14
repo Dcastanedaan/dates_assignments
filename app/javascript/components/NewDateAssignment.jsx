@@ -6,6 +6,7 @@ const NewDataAssignment = () => {
   const navigate = useNavigate();
   const today = new Date();
   const defaultStartDate = format(today, "yyyy-MM-dd");
+  const [errors, setErrors] = useState([]);
 
   const[starts_at, setStartsAt] = useState("");
   const[ends_at, setEndsAt] = useState("");
@@ -17,9 +18,18 @@ const NewDataAssignment = () => {
   };
 
   const isValidDate = (dateString) => {
+    
     const date = parseISO(dateString);
     const today = new Date();
     return isAfter(date, today);
+  };
+
+  const isValidEndDate = (date) => {
+
+    if (date >= starts_at)
+      return date;
+    else false
+   
   };
 
   const onSubmit = (event) => {
@@ -27,9 +37,9 @@ const NewDataAssignment = () => {
     const url = "/api/v1/dates_assignments/create";
 
     setIsStartsAtValid(isValidDate(starts_at));
-    setIsEndsAtValid(isValidDate(ends_at));
+    setIsEndsAtValid(isValidEndDate(ends_at));
 
-    if (starts_at.length == 0 || ends_at.length == 0 || !isValidDate(starts_at) || !isValidDate(ends_at))
+    if (starts_at.length == 0 || ends_at.length == 0 || !isValidDate(starts_at) || !isValidEndDate(ends_at))
     return;
 
     const body = {
@@ -64,7 +74,7 @@ const NewDataAssignment = () => {
           </h1>
           <form onSubmit={onSubmit}>
             <div className="form-group">
-              <label htmlFor="dateAssignmentStartsAt" className="lead">Enter the starting date</label>
+              <label htmlFor="dateAssignmentStartsAt" className="lead">Enter the starting</label>
               <input
                 type="date"
                 name="startAt"
@@ -84,7 +94,7 @@ const NewDataAssignment = () => {
               )}
             </div>
             <div className="form-group">
-              <label htmlFor="dateAssignmentEndsAt" className="lead">enter the starting date</label>
+              <label htmlFor="dateAssignmentEndsAt" className="lead">enter the end date</label>
               <input
                 type="date"
                 name="endAt"
@@ -93,10 +103,10 @@ const NewDataAssignment = () => {
                 placeholder="dd/mm/yyyy"
                 required
                 value={ends_at}
-                min={defaultStartDate}
+                min={starts_at}
                 onChange={(event) => {
                   onChange(event, setEndsAt);
-                  setIsEndsAtValid(isValidDate(event.target.value));
+                  setIsEndsAtValid(isValidEndDate(event.target.value));
                 }}
               />
                {!isEndsAtValid && (

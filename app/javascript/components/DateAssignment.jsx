@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { isValid, parseISO, format } from "date-fns";
 
 const DateAssignment = () => {
   const params = useParams();
   const navigate = useNavigate();
-  
+  function refreshPage() {
+    window.location.reload(false);
+  }
+  const reformat = (date) => {
+    if (isValid(parseISO(date))){
+      const fecha = format(parseISO(date), 'dd/MM/yyyy');
+      return fecha;
+    }
+    return date;
+  };
   const [daySchedule, setDaySchedule] = useState(
     {
       day: 'Monday',
-      hour: '',
-      minute: '',
+      hour: '0',
+      minute: '00',
       quota: '',
       date_assignment_id: params.id
     }
@@ -35,12 +45,12 @@ const DateAssignment = () => {
     event.preventDefault();
     const { hour, minute, quota } = daySchedule;
 
-    if (!hour || !minute || !quota) {
+    if (!quota || quota < 0) {
       alert('Please fill all the fields');
       return;
     }
-    if (hour < 1 || hour > 12 ) {
-      alert('The hour must be between 1 and 12');
+    if (hour < 0 || hour > 23 ) {
+      alert('The hour must be between 0 and 23');
       return;
     }
     if (minute < 0 || minute > 59 ) {
@@ -64,16 +74,38 @@ const DateAssignment = () => {
       }
       throw new Error("Network response was not ok.");
     })
-    .then((response) => console.log(response))
+    .then((response) => (console.log(response), refreshPage()))
     .catch((error) => console.log(error.message));
   }
+
+  const deleteSchedule = () => {
+    const url = `/api/v1/destroy/${params.id}`;
+    const token = document.querySelector('meta[name="csrf-token"]').content;
+
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then(() => (refreshPage()),(navigate("/date_assignments")))
+      .catch((error) => console.log(error.message));
+  }
+
   const handleInputChange = (event) => {
     setDaySchedule({
         ...daySchedule,
         [event.target.name] : event.target.value
     })
   }
-
+  
   return(
     <div className="d-flex flex-column justify-content-center align-items-center mt-4">
       <div className="jumbotron jumbotron-fluid bg-transparent mb-3">
@@ -81,12 +113,14 @@ const DateAssignment = () => {
           <h1 className="display-4">Schedule</h1>
         </div>
         <div className="d-flex display-content-between gap-2">
-          <p className="lead">Start at: {dateAssignment.starts_at}</p>
-          <p className="lead">End at: {dateAssignment.starts_at}</p>
+          <p className="lead">Start at: {reformat(dateAssignment.starts_at)}</p>
+          <p className="lead">End at: {reformat(dateAssignment.ends_at)}</p>
         </div>
-        <div>
-        <button onClick={homeNavigate} className="btn btn-lg custom-button ml-4">Back </button>
+        <div className="d-flex gap-4">
+          <button onClick={homeNavigate} className="btn btn-lg custom-button ml-4">Back </button>
+          <button type="button" className="btn btn-danger"onClick={deleteSchedule}>Delete</button>
         </div>
+        
         <form onSubmit={onSubmit}>
           <div className="mt-4">
             <div className="row">
@@ -94,13 +128,13 @@ const DateAssignment = () => {
                 <div className="form-group">
                   <label htmlFor="start_date" >Day:</label>
                   <select className=" form-control"   name="day" onChange={handleInputChange} >
-                    <option value="Monday">Lunes</option>
-                    <option value="Tuesday">Martes</option>
-                    <option value="Wednesday">Miercoles</option>
-                    <option value="Thursday">Jueves</option>
-                    <option value="Friday">Viernes</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
                     <option value="Saturday">Sabado</option>
-                    <option value="Sunday">Domingo</option>
+                    <option value="Sunday">Sunday</option>
                   </select>
                 </div>
               </div>
@@ -118,8 +152,8 @@ const DateAssignment = () => {
               </div>
               <div className="col-2">
                 <div className="form-group">
-                  <label htmlFor="minutes">Quote:</label>
-                  <input type="number" className="form-control" id="minutes" name="quota" placeholder="0" onChange={handleInputChange} />
+                  <label htmlFor="quota">Quota:</label>
+                  <input type="number" className="form-control" id="quota" name="quota" placeholder="0" onChange={handleInputChange} />
                 </div>
               </div>
               <div className="col-3 mt-4">
@@ -133,6 +167,7 @@ const DateAssignment = () => {
       </div>
 
       <div className=" bg-light w-100 p-5 mt-2">
+        
         <ul className="list-group list-group-flush">
           {dateAssignment.day_schedules && dateAssignment.day_schedules.slice().reverse().map((assignment) => (
             <li key={assignment.id} className="list-group-item">
@@ -143,7 +178,7 @@ const DateAssignment = () => {
                       <th scope="col">Day</th>
                       <th scope="col">Hour</th>
                       <th scope="col">Min</th>
-                      <th scope="col">Quote</th>
+                      <th scope="col">Quota</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -163,8 +198,5 @@ const DateAssignment = () => {
     </div>
   );
 };
-
-
-
 
 export default DateAssignment

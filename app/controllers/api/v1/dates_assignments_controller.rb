@@ -34,7 +34,7 @@ class Api::V1::DatesAssignmentsController < ApplicationController
   end
 
   def destroy
-    @dates_assignment&.destroy!
+    @data_assignment&.destroy!
     render json: { message: 'Date Assignment deleted!'}
   end
 

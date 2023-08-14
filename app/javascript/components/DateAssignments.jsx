@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { format } from "date-fns";
+import { parseISO, format } from "date-fns";
 
 const DateAssignments = () => {
   const navigate = useNavigate();
   const [dateAssignments, setDateAssignments] = useState([]);
+  
   const homeNavigate = () => {
     navigate("/");
   };
 
+  const reformat = (date) => {
+    const fecha = format(parseISO(date), 'dd/MM/yyyy');
+    return fecha;
+  };
   useEffect(() => {
     const url = "/api/v1/dates_assignments/index"; 
     fetch(url)
@@ -20,6 +25,7 @@ const DateAssignments = () => {
       })
       .then((res) => setDateAssignments(res))
       .catch(() => navigate("/"));
+      
   }, []);
 
   return (
@@ -32,11 +38,13 @@ const DateAssignments = () => {
         <div className="p-3 bg-light">
           <ul className="list-group list-group-flush">
             {dateAssignments.map((assignment) => (
+              
               <Link to={`/date_assignment/${assignment.id}`} style={{ textDecoration: 'none'}}>
+                
                 <li key={assignment.id} className="list-group-item">
                   <div className="d-flex justify-content-between gap-2">
-                    <p className="lead">Start at: {format(new Date(assignment.starts_at), 'dd/MM/yyyy')}</p>
-                    <p className="lead">End at: {format(new Date(assignment.ends_at), 'dd/MM/yyyy')}</p>
+                    <p className="lead">Start at: { reformat(assignment.starts_at) }</p>
+                    <p className="lead">End at: { reformat(assignment.ends_at) }</p>
                   </div>
                 </li>
               </Link>
